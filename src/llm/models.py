@@ -119,7 +119,12 @@ def get_model(model_name: str, model_provider: ModelProvider) -> ChatOpenAI | Ch
             # Print error to console
             print(f"API Key Error: Please make sure OPENAI_API_KEY is set in your .env file.")
             raise ValueError("OpenAI API key not found.  Please make sure OPENAI_API_KEY is set in your .env file.")
-        return ChatOpenAI(model=model_name, api_key=api_key)
+        base_url = os.getenv("OPENAI_BASE_URL", None)
+        if base_url:
+            return ChatOpenAI(model=model_name, api_key=api_key, base_url=base_url)
+        else:
+            # If no base_url is set, use the default
+            return ChatOpenAI(model=model_name, api_key=api_key)
     elif model_provider == ModelProvider.ANTHROPIC:
         api_key = os.getenv("ANTHROPIC_API_KEY")
         if not api_key:
