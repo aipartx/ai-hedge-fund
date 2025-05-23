@@ -146,6 +146,7 @@ if __name__ == "__main__":
     parser.add_argument("--show-reasoning", action="store_true", help="Show reasoning from each agent")
     parser.add_argument("--show-agent-graph", action="store_true", help="Show the agent graph")
     parser.add_argument("--ollama", action="store_true", help="Use Ollama for local LLM inference")
+    parser.add_argument("--format", type=str,default="table", help="Display result as the format(table|json)")
 
     args = parser.parse_args()
 
@@ -318,4 +319,7 @@ if __name__ == "__main__":
         model_name=model_name,
         model_provider=model_provider,
     )
-    print_trading_output(result)
+    if args.format == "json":
+        print(json.dumps(result,indent=4))
+    else:
+        print_trading_output(result)
