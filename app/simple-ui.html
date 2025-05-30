@@ -481,6 +481,31 @@
         .value:contains("neutral") {
             color: var(--warning-color);
         }
+        .input-with-button {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-with-button input {
+            flex-grow: 1;
+        }
+
+        .btn-secondary {
+            background-color: var(--neutral-color);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background-color: #4a4d50;
+            box-shadow: var(--shadow-sm);
+        }        
         
     </style>
 </head>
@@ -501,9 +526,11 @@
             <form id="hedgeFundForm">
                 <div class="form-group">
                     <label for="api_base_url">API Base URL:</label>
-                    <input type="text" id="api_base_url" name="api_base_url" placeholder="Example: http://localhost:8000" title="If it is not localhost, please modify 'allow_origins' in backend/main.py to '*'">
-                </div>
-                
+                    <div class="input-with-button">
+                        <input type="text" id="api_base_url" name="api_base_url" placeholder="Example: http://localhost:8000" title="If it is not localhost, please modify 'allow_origins' in backend/main.py to '*'">
+                        <button type="button" id="refreshApiBtn" class="btn-secondary" title="Refresh">🧬</button>
+                    </div>
+                </div>                
                 <div class="form-group">
                     <label for="tickers">Stock Symbols (comma separated):</label>
                     <input type="text" id="tickers" name="tickers" placeholder="Example: AAPL,MSFT,GOOGL" required>
@@ -1071,6 +1098,17 @@
             return actionMap[action.toLowerCase()] || action;
         }
         
+        // Refresh API data button
+        document.getElementById('refreshApiBtn').addEventListener('click', function() {
+            // Clear existing data
+            document.getElementById('analystsContainer').innerHTML = '<div class="loading">加载中...</div>';
+            document.getElementById('model_provider').innerHTML = '<option value="">加载中...</option>';
+            document.getElementById('model_name').innerHTML = '<option value="">请先选择模型提供商</option>';
+            
+            // Fetch new data
+            fetchAnalysts();
+            fetchModels();
+        });        
         // Initialized when the page loads
         window.addEventListener('DOMContentLoaded', function() {
             setDefaultDates();
